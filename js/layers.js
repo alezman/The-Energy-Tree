@@ -385,7 +385,7 @@ addLayer("t", {
     baseResource: "laboratory station(s)",                 // The name of the resource your prestige gain is based on.
     baseAmount() { return player.l.points },  // A function to return the current amount of baseResource.
 
-    requires: new Decimal(35),              // The amount of the base needed to  gain 1 of the prestige currency.
+    requires: new Decimal(30),              // The amount of the base needed to  gain 1 of the prestige currency.
                                             // Also the amount required to unlock the layer.
 
     type: "static",                         // Determines the formula used for calculating prestige currency.
@@ -629,7 +629,7 @@ addLayer("s", {
     baseResource: "laboratory station(s)",  // The name of the resource your prestige gain is based on.
     baseAmount() { return player.l.points },  // A function to return the current amount of baseResource.
 
-    requires: new Decimal(35),              // The amount of the base needed to  gain 1 of the prestige currency.
+    requires: new Decimal(30),              // The amount of the base needed to  gain 1 of the prestige currency.
                                             // Also the amount required to unlock the layer.
 
     type: "static",                         // Determines the formula used for calculating prestige currency.
