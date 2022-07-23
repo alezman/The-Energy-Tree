@@ -19,8 +19,14 @@ let VERSION = {
 
 let changelog = `<h1>Changelog:</h1><br>
 	<h3>v1.0</h3><br>
-		- Made the game.
-		- Among us.
+		· Made the game.<br>
+		· Among us.<br>
+	<h3>v1.1</h3><br>
+	    · Added QoL.<br>
+		· More QoL lmao.<br>
+	<h3>v1.1.1</h3><br>
+	    · frfr gwugs?!?11?11???1111!??!!!1?1<br>
+		· Even more QoL, thanks Acamaeda for the help.<br>
 `
 
 let winText = `... and you woke up in your house. Was this all a dream? Stay tuned for the next update!`
