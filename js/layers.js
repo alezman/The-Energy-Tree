@@ -181,7 +181,7 @@ addLayer("l", {
     },
     layerShown() { return hasUpgrade('p',31) || player.l.total.gte(1)},
     effect() {
-        let eff = player.l.points.add(1).log(1.2).add(1)
+        let eff = player.l.best.add(1).log(1.2).add(1)
         eff = eff.mul(buyableEffect('l',12))
         if (hasUpgrade('st',11)) eff = eff.pow(upgradeEffect('st',11))
         return eff
@@ -548,7 +548,7 @@ addLayer("t", {
         if (player.gt.auto1 && canReset('t')) doReset('t')
     },
     effectByMilestone() {
-        let eff = new Decimal(1.25).pow(player.t.points).max(1)
+        let eff = new Decimal(1.25).pow(player.t.best).max(1)
         return eff
     },
     resetsNothing() {
@@ -661,7 +661,7 @@ addLayer("s", {
             description() {return "Space Energy boosts the Generation by " + format(upgradeEffect('s',31)) + "."},
             cost: new Decimal(10),
             effect() {
-                let eff = player.s.points.add(1).log(2).pow(1.4).add(1)
+                let eff = player.s.best.add(1).log(2).pow(1.4).add(1)
                 return eff
             }
         },
@@ -670,7 +670,7 @@ addLayer("s", {
             description() {return "Time Energy boosts the Laboratory gain by " + format(upgradeEffect('s',32)) + "."},
             cost: new Decimal(11),
             effect() {
-                let eff = player.t.points.add(1).log(9).add(1)
+                let eff = player.t.best.add(1).log(9).add(1)
                 return eff
             }
         },
@@ -733,7 +733,7 @@ addLayer("s", {
         if (player.gs.auto1 && canReset('s')) doReset('s')
     },
     effectByMilestone() {
-        let eff = new Decimal(1.25).pow(player.s.points).max(1)
+        let eff = new Decimal(1.25).pow(player.s.best).max(1)
         return eff
     },
     resetsNothing() {
