@@ -1039,7 +1039,7 @@ addLayer("gs", {
         },
     },
     effect() {
-        let eff = player.gs.points.add(1).log(100).pow(2).add(1)
+        let eff = player.gs.points.add(1).log(70).pow(3).add(1)
         return eff
     },
     effectDescription() {
