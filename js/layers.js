@@ -652,7 +652,7 @@ addLayer("s", {
             description: function() {return `Boost "First Improvements" by ^` + format(upgradeEffect('s',24)) + "."},
             cost: new Decimal(8),
             effect() {
-                let eff = player.s.points.add(1).log(10).add(1)
+                let eff = player.s.best.add(1).log(10).add(1)
                 return eff
             }
         },
@@ -826,7 +826,7 @@ addLayer("st", {
             description() { return `You gave your Generation a bit of improvements and the Laboratory effect is improved by ^`+ format(upgradeEffect('st',11)) + `.` },
             cost: new Decimal(2),
             effect() {
-                let eff = player.st.points.add(1).log(5).pow(1.25).add(1).min(10)
+                let eff = player.st.best.add(1).log(5).pow(1.25).add(1).min(10)
                 return eff
             }
         },
