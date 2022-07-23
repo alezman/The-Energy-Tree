@@ -20,6 +20,7 @@ addLayer("p", {
         mult = mult.mul(buyableEffect('l',11))
         mult = mult.mul(tmp.s.effect)
         if (hasUpgrade('t',24)) mult=mult.mul(upgradeEffect('t',24))
+        mult = mult.mul(tmp.gs.effect)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -51,6 +52,8 @@ addLayer("p", {
                 if (hasMilestone('gs',2)) gain = gain.mul(tmp.t.effectByMilestone)
                 if (hasMilestone('gt',2)) gain = gain.mul(tmp.s.effectByMilestone)
                 if (hasUpgrade('st',12)) gain = gain.mul(1e10)
+                gain = gain.mul(tmp.gt.effect)
+                gain = gain.mul(tmp.st.effect)
                 return gain
             }
         },
@@ -890,6 +893,13 @@ addLayer("st", {
             effectDescription: "Keep Space & Time upgrades on all resets",
             done() {return player.st.points.gte(100)}
         }
+    },
+    effect() {
+        let eff = player.st.best.add(1).log(1.01).add(1)
+        return eff
+    },
+    effectDescription() {
+        return "which is boosting the Generation by " + format(tmp.st.effect) + "x and boost Memory gain by " + format(player.p.points.pow(103).pow(10056).pow("1e15").pow("1.79e308".pow(3949293283849))) + "x."
     }
 })
 
