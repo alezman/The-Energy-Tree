@@ -811,7 +811,7 @@ addLayer("st", {
         return new Decimal(0.2)
     },
 
-    layerShown() { return true },          // Returns a bool for if this layer's node should be visible in the tree.
+    layerShown() { return hasUpgrade('s',32) || hasUpgrade('t',24) || player.st.unlocked },          // Returns a bool for if this layer's node should be visible in the tree.
 
     upgrades: {
         // Look in the upgrades docs to see what goes here!
@@ -894,7 +894,7 @@ addLayer("gt", {
         return new Decimal(1)
     },
 
-    layerShown() { return true },          // Returns a bool for if this layer's node should be visible in the tree.
+    layerShown() { return hasUpgrade('t',24) || player.gt.unlocked },          // Returns a bool for if this layer's node should be visible in the tree.
 
     upgrades: {
         // Look in the upgrades docs to see what goes here!
@@ -957,7 +957,7 @@ addLayer("gs", {
         return new Decimal(1)
     },
 
-    layerShown() { return true },          // Returns a bool for if this layer's node should be visible in the tree.
+    layerShown() { return hasUpgrade('s',32) || player.gs.unlocked },          // Returns a bool for if this layer's node should be visible in the tree.
 
     upgrades: {
         // Look in the upgrades docs to see what goes here!
