@@ -963,6 +963,15 @@ addLayer("gt", {
             effectDescription: "Quality of Life is important. It defines whether you are capable of stabilizing your world that you yourself shape, and it's mostly the thing to define whether your world is worthy or not. In this case, you've chosen to go for the Quality of Life. You can now keep your milestone toggles of the Time Energy on reset.",
             done() {return player.t.points.gte(20) && player.s.points.gte(20) }
         }
+    },
+    effect() {
+        let eff = new Decimal(2).pow(player.gt.points).min(512)
+        let eff2 = player.gt.points.add(1).log(1.05).pow(1.2).add(1)
+        if (eff.gte(512)) eff = eff.mul(eff2) 
+        return eff
+    },
+    effectDescription() {
+        return "which is boosting the Generation by " + format(tmp.gt.effect) + "x."
     }
 })
 addLayer("gs", {
@@ -1028,5 +1037,12 @@ addLayer("gs", {
             effectDescription: `You have greatly improved since your last milestone reached. Humanity never gives up, not until they reach the infinity. That's common in your race, fellow human.<br>Unlocks 1/3 of the current endgame.`,
             done() {return player.gs.points.gte(10)}
         },
+    },
+    effect() {
+        let eff = player.gs.points.add(1).log(100).pow(2).add(1)
+        return eff
+    },
+    effectDescription() {
+        return "which is multiplying the Energy gain by " + format(tmp.gs.effect) + "x and increasing the Hydrogen Tank Capacity by " + format(player.points.pow(543)) + "x."
     }
 })
