@@ -827,7 +827,7 @@ addLayer("st", {
     baseResource: "points",                 // The name of the resource your prestige gain is based on.
     baseAmount() { return player.points },  // A function to return the current amount of baseResource.
 
-    requires: new Decimal(2e13),              // The amount of the base needed to  gain 1 of the prestige currency.
+    requires: new Decimal(1e14),              // The amount of the base needed to  gain 1 of the prestige currency.
                                             // Also the amount required to unlock the layer.
 
     type: "normal",                         // Determines the formula used for calculating prestige currency.
@@ -837,7 +837,7 @@ addLayer("st", {
         return new Decimal(1)               // Factor in any bonuses multiplying gain here.
     },
     gainExp() {                             // Returns the exponent to your gain of the prestige resource.
-        return new Decimal(0.2)
+        return new Decimal(0.5)
     },
 
     layerShown() { return hasUpgrade('s',32) || hasUpgrade('t',24) || player.st.unlocked },          // Returns a bool for if this layer's node should be visible in the tree.
