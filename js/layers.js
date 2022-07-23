@@ -141,7 +141,8 @@ addLayer("p", {
         }
     },
     passiveGeneration() {
-        if (hasMilestone('t',3)) return 0.1
+        let gen = 0.1
+        if (hasMilestone('t',3)) return gen
         if (player.t.timerLeft.gt(0)) gen *= 3
     }
 
