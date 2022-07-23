@@ -583,7 +583,7 @@ addLayer("t", {
         if (hasMilestone('gt',4) && player.l.auto2) player.l.auto2 = true
     },
     hotkeys: [
-        {key: "e", description: "E: Reset for energy.", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+        {key: "t", description: "T: Reset for time energy.", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
 })
 addLayer("s", {
