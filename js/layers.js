@@ -354,6 +354,11 @@ addLayer("l", {
             } 
         }
     },
+    onPrestige() {
+        if (hasMilestone('t',4) && player.l.auto1) player.l.auto1 = true
+        if (hasMilestone('t',4) && player.l.auto2) player.l.auto2 = true
+        if (hasMilestone('t',4) && player.l.auto3) player.l.auto3 = true
+    }
 })
 addLayer("t", {
     startData() { return {                  // startData is a function that returns default data for a layer. 
@@ -366,6 +371,9 @@ addLayer("t", {
         auto1: false,
         auto2: false,
     }},
+    hotkeys: [
+        {key: "t", description: "T: Reset for time energy.", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
 
     color: "#006aff",                       // The color for this layer, which affects many elements.
     resource: "time energy",                // The name of this layer's main prestige resource.
@@ -505,6 +513,13 @@ addLayer("t", {
             done() {
                 return player.t.points.gte(7)
             }
+        },
+        4: {
+            requirementDescription: "250 laboratories",
+            effectDescription: "A lot of laboratories, huh? You don't have anything better to do? You can actually keep your Laboratory milestone toggles ON (given that you actually had them ON to begin with).",
+            done() {
+                return player.l.points.gte(250)
+            }
         }
     },
     tabFormat: {
@@ -563,6 +578,13 @@ addLayer("t", {
             layerDataReset(this.layer, keep) 
         }               
     },
+    onPrestige() {
+        if (hasMilestone('gt',4) && player.l.auto1) player.l.auto1 = true
+        if (hasMilestone('gt',4) && player.l.auto2) player.l.auto2 = true
+    },
+    hotkeys: [
+        {key: "e", description: "E: Reset for energy.", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
 })
 addLayer("s", {
     startData() { return {                  // startData is a function that returns default data for a layer. 
@@ -571,6 +593,9 @@ addLayer("s", {
         best: new Decimal(0),
         total: new Decimal(0),
     }},
+    hotkeys: [
+        {key: "s", description: "S: Reset for space energy.", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
     tabFormat: {
         "Upgrades": {
             content: [
@@ -791,6 +816,9 @@ addLayer("st", {
         best: new Decimal(0),
         total: new Decimal(0),
     }},
+    hotkeys: [
+        {key: "y", description: "Y: Reset for spacetime energy.", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
 
     color: "#008cff",                       // The color for this layer, which affects many elements.
     resource: "spacetime energy",            // The name of this layer's main prestige resource.
@@ -874,6 +902,9 @@ addLayer("gt", {
         total: new Decimal(0),
         auto1: false,
     }},
+    hotkeys: [
+        {key: "h", description: "H: Reset for greater time energy.", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
 
     color: "#0026ff",                       // The color for this layer, which affects many elements.
     resource: "greater time energy",            // The name of this layer's main prestige resource.
@@ -926,6 +957,11 @@ addLayer("gt", {
             requirementDescription: "10 greater time energy",
             effectDescription: "Do you remember your start? It's not that far but seeing all this admirable progress it makes you think back to your origins. You were a mere human with the ambition to change the world around him, and you became a human with the ability to control time and space like you'd control eating spaghetti with meatballs. I, the lore maker, am sincerely impressed with your progress. Congratulations.<br>Unlocks 1/3 of the current endgame.",
             done() {return player.gt.points.gte(10)}
+        },
+        4: {
+            requirementDescription: "20 time & space energy",
+            effectDescription: "Quality of Life is important. It defines whether you are capable of stabilizing your world that you yourself shape, and it's mostly the thing to define whether your world is worthy or not. In this case, you've chosen to go for the Quality of Life. You can now keep your milestone toggles of the Time Energy on reset.",
+            done() {return player.t.points.gte(20) && player.s.points.gte(20) }
         }
     }
 })
@@ -937,6 +973,9 @@ addLayer("gs", {
         total: new Decimal(0),
         auto1: false,
     }},
+    hotkeys: [
+        {key: "j", description: "J: Reset for greater space energy.", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
 
     color: "#00ffff",                       // The color for this layer, which affects many elements.
     resource: "greater space energy",            // The name of this layer's main prestige resource.
