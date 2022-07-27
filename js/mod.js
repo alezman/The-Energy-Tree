@@ -32,7 +32,7 @@ let changelog = `<h1>Changelog:</h1><br>
 		· Fixed a deadly bug and some extra QoL.<br>
 `
 
-let winText = `... and you woke up in your house. Was this all a dream? Stay tuned for the next update!`
+let winText = `You rebirthed, and got better control! Stay tuned for the next update!`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)

@@ -103,6 +103,9 @@ addLayer("r", {
             },
             unlocked() {
                 return hasChallenge('r',21)
+            },
+            unlocked() {
+                return hasChallenge('r',21)
             }
         },
         32: {
@@ -117,6 +120,9 @@ addLayer("r", {
             effect() {
                 let eff = player.gt.points.add(1).log(1.01).pow(2).pow(1.5).add(1)
                 return eff
+            },
+            unlocked() {
+                return hasChallenge('r',21)
             }
         }
     },
