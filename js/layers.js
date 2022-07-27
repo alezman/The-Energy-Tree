@@ -17,10 +17,13 @@ addLayer("p", {
     exponent: 0.5, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
-        mult = mult.mul(buyableEffect('l',11))
+        if(!inChallenge('r',12)) mult = mult.mul(buyableEffect('l',11))
+        if(inChallenge('r',12)) mult = mult.div(buyableEffect('l',11))
         mult = mult.mul(tmp.s.effect)
         if (hasUpgrade('t',24)) mult=mult.mul(upgradeEffect('t',24))
         mult = mult.mul(tmp.gs.effect)
+        if (inChallenge('r',11)) mult=mult.pow(0.75)
+        if (hasChallenge('r',21)) mult=mult.mul(challengeEffect('r',21))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -54,6 +57,11 @@ addLayer("p", {
                 if (hasUpgrade('st',12)) gain = gain.mul(1e10)
                 gain = gain.mul(tmp.gt.effect)
                 gain = gain.mul(tmp.st.effect)
+                if (hasAchievement('a',12)) gain = gain.mul(1.6942)
+                if (inChallenge('r',11)) gain=gain.pow(0.45)
+                gain = gain.mul(tmp.r.effect)
+                if (hasChallenge('r',11)) gain=gain.mul(challengeEffect('r',11))
+                if (hasUpgrade('r',33)) gain = gain.mul(upgradeEffect('r',33))
                 return gain
             }
         },
@@ -68,6 +76,7 @@ addLayer("p", {
                 let eff = player.p.points.add(3).log(3).add(1.5)
                 if (hasMilestone('s',2)) eff = eff.pow(2)
                 if (hasUpgrade('s',24)) eff = eff.pow(upgradeEffect('s',24))
+                if (hasChallenge('r',12)) eff = eff.pow(5)
                 return eff
             },
             canAfford() {
@@ -83,7 +92,7 @@ addLayer("p", {
             },
             effect() {
                 let eff = player.points.add(1).log(10).add(1)
-                if (hasMilestone('l',4)) eff = eff.pow(2)
+                if (hasMilestone('l',3)) eff = eff.pow(2)
                 return eff
             },
             canAfford() {
@@ -177,6 +186,7 @@ addLayer("l", {
     gainMult() {                               // Returns your multiplier to your gain of the prestige resource.
         let mult = new Decimal(1)              // A variable to maniuplate the multiplier with ease.
         if (hasUpgrade('s',32)) mult = mult.mul(upgradeEffect('s',32))
+        if (hasAchievement('a',15)) mult = mult.mul(1.29)
         return mult                            // Factor in any bonuses multiplying gain here.
     },                                         // Destroy the absolute factor by multiplying mega-gain.
     gainExp() {                                // Returns the exponent to your gain of the prestige resource.
@@ -300,7 +310,7 @@ addLayer("l", {
                 ["l", "auto2"]
             ]
         },
-        3: {
+        2: {
             requirementDescription: "4 laboratories",
             effectDescription: "After getting your fourth laboratory and having sacrificed all your energy that many times, you understood fully the power of your automation and mastered it. You can now purchase automatically the third upgrade.",
             done() {
@@ -310,14 +320,14 @@ addLayer("l", {
                 ["l", "auto3"]
             ]
         },
-        4: {
+        3: {
             requirementDescription: "10 laboratories",
             effectDescription: `It's been so many resets. You've created enough laboratories to comprehend that you are now capable of boosting your Generation further. You CAN generate more with simple synergies. Upgrade "Synergy Strategy" is squared.`,
             done() {
                 return player.l.points.gte(10)
             },
         },
-        5: {
+        4: {
             requirementDescription: "5,000 energy",
             effectDescription: `Possessing so much energy, you've decided it's time to finally use it. You may affect Time, or you may affect Space. Either way, you've unlocked 2 new layers now.`,
             done() {
@@ -349,6 +359,7 @@ addLayer("l", {
             let keep = []
             let specialUpgs = []
             if (hasMilestone('s',4)) keep.push("milestones")
+            if (hasMilestone('t',4)) keep.push("auto1", "auto2", "auto3")
             layerDataReset('l', keep)
             for(i in specialUpgs) {
                 if (!player[this.layer].upgrades.includes(specialUpgs[i])) {
@@ -400,7 +411,7 @@ addLayer("t", {
         return new Decimal(1)
     },
 
-    layerShown() { return hasMilestone('l',5) || player.t.unlocked },          // Returns a bool for if this layer's node should be visible in the tree.
+    layerShown() { return hasMilestone('l',4) && !inChallenge('r',21) || player.t.unlocked && !inChallenge('r',21) },          // Returns a bool for if this layer's node should be visible in the tree.
 
     upgrades: {
         11: {
@@ -567,6 +578,7 @@ addLayer("t", {
     },
     effectByMilestone() {
         let eff = new Decimal(1.25).pow(player.t.best).max(1)
+        if (inChallenge('r',21)) eff = eff.min(1)
         return eff
     },
     resetsNothing() {
@@ -578,16 +590,20 @@ addLayer("t", {
             let keep = []
             if (hasMilestone('gt',1)) keep.push("milestones")
             if (hasMilestone('st',0)) keep.push("upgrades")
-            layerDataReset(this.layer, keep) 
+            if (hasMilestone('gt',4)) keep.push("auto1","auto2")
+            layerDataReset(this.layer, keep)
         }               
     },
     onPrestige() {
-        if (hasMilestone('gt',4) && player.l.auto1) player.l.auto1 = true
-        if (hasMilestone('gt',4) && player.l.auto2) player.l.auto2 = true
+        if (hasMilestone('gt',4) && player.t.auto1) player.t.auto1 = true
+        if (hasMilestone('gt',4) && player.t.auto2) player.t.auto2 = true
     },
     hotkeys: [
         {key: "t", description: "T: Reset for time energy.", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
+    deactivated() {
+        return inChallenge('r',21)
+    }
 })
 addLayer("s", {
     startData() { return {                  // startData is a function that returns default data for a layer. 
@@ -644,7 +660,7 @@ addLayer("s", {
         return new Decimal(1)
     },
 
-    layerShown() { return hasMilestone('l',5) || player.s.unlocked},          // Returns a bool for if this layer's node should be visible in the tree.
+    layerShown() { return hasMilestone('l',4) || player.s.unlocked},          // Returns a bool for if this layer's node should be visible in the tree.
 
     upgrades: {
         11: {
@@ -825,7 +841,7 @@ addLayer("st", {
 
     color: "#008cff",                       // The color for this layer, which affects many elements.
     resource: "spacetime energy",            // The name of this layer's main prestige resource.
-    row: 4,                                 // The row this layer is on (0 is the first row).
+    row: 3,                                 // The row this layer is on (0 is the first row).
 
     baseResource: "points",                 // The name of the resource your prestige gain is based on.
     baseAmount() { return player.points },  // A function to return the current amount of baseResource.
@@ -843,7 +859,7 @@ addLayer("st", {
         return new Decimal(0.5)
     },
 
-    layerShown() { return hasUpgrade('s',32) || hasUpgrade('t',24) || player.st.unlocked },          // Returns a bool for if this layer's node should be visible in the tree.
+    layerShown() { return hasUpgrade('s',32) && !inChallenge('r',21) || hasUpgrade('t',24) && !inChallenge('r',21) || player.st.unlocked && !inChallenge('r',21) },          // Returns a bool for if this layer's node should be visible in the tree.
 
     upgrades: {
         // Look in the upgrades docs to see what goes here!
@@ -868,18 +884,18 @@ addLayer("st", {
         },
         13: {
             title: `<span style="color:#b82fbd;text-shadow:0 0 2px #000000;">The Price of Something</span>`,
-            description() { return `Humans. Humans never learn their lesson, do they? <br>Unlocks 1/3 of the current endgame.` },
+            description() { return `Humans. Humans never learn their lesson, do they? <br>Unlocks 1/3 of something...` },
             cost: new Decimal(5000),
             unlocked() {
                 return hasMilestone('gt',3) && hasMilestone('gs',3)
             }
         },
         21: {
-            title: `<b><span style="color:#00000;text-shadow:2px 2px 2px #000000;">The Price of Your Mistakes</span></b>`,
-            description() {return "You pushed your limits. Even if you reached to the Greater Time and Greater Space, you still forgot that you are just a simple human, and your physical body does not account for taking such a huge power. Your body fails on you and you have a seizure in the middle of your own kingdom of space and time, with nobody to help you because they cannot reach to you. Your whole kingdom collapses into pieces and there isn't anything really to do since you're having a seizure. A pillar falls right above you and you get hit hard. You are now unconscious.<br><b>Unlocks the endgame.</b>"},
+            title: `<b><span style="color:#ff1100;text-shadow:1px 1px 2px #000000;">The Price of Your Mistakes</span></b>`,
+            description() {return "You pushed your limits. Even if you reached to the Greater Time and Greater Space, you still forgot that you are just a simple human, and your physical body does not account for taking such a huge power. Your body fails on you and you have a seizure in the middle of your own kingdom of space and time, with nobody to help you because they cannot reach to you. Your whole kingdom collapses into pieces and there isn't anything really to do since you're having a seizure. A pillar falls right above you and you get hit hard. You are now unconscious. You couldn't see anything, and you felt as your body whole gave up on you completely. You... you... are you there?<br><b>Unlocks new content.</b>"},
             cost: new Decimal(100000),
             unlocked() {
-                return hasUpgrade('st',13)
+                return hasUpgrade('st',13) || player.r.unlocked
             },
             style: {
                 "width": "360px",
@@ -899,7 +915,23 @@ addLayer("st", {
         return eff
     },
     effectDescription() {
-        return "which is boosting the Generation by " + format(tmp.st.effect) + "x and boost Memory gain by " + format(player.p.points.pow(103).pow(10056).pow("1e15").pow("1.79e308".pow(3949293283849))) + "x."
+        return "which is boosting the Generation by " + format(tmp.st.effect) + "x and boost Memory gain by " + format(player.p.points.pow(103).pow(10056).pow("1e15").pow("1.79e308").pow(3949293283849)) + "x."
+    },
+    doReset(resettingLayer) {
+            if (temp[resettingLayer].row > temp.p.row) {
+                // the three lines here
+                let keep = []
+                let specialUpgs = [21]
+                layerDataReset('p', keep)
+                for(i in specialUpgs) {
+                    if (!player[this.layer].upgrades.includes(specialUpgs[i])) {
+                    player[this.layer].upgrades.push(specialUpgs[i])
+                }
+            } 
+        }
+    },
+    deactivated() {
+        return inChallenge('r',21)
     }
 })
 
@@ -918,7 +950,7 @@ addLayer("gt", {
 
     color: "#0026ff",                       // The color for this layer, which affects many elements.
     resource: "greater time energy",            // The name of this layer's main prestige resource.
-    row: 4,                                 // The row this layer is on (0 is the first row).
+    row: 3,                                 // The row this layer is on (0 is the first row).
 
     baseResource: "time energy",                 // The name of the resource your prestige gain is based on.
     baseAmount() { return player.t.points },  // A function to return the current amount of baseResource.
@@ -936,7 +968,7 @@ addLayer("gt", {
         return new Decimal(1)
     },
 
-    layerShown() { return hasUpgrade('t',24) || player.gt.unlocked },          // Returns a bool for if this layer's node should be visible in the tree.
+    layerShown() { return hasUpgrade('t',24) && !inChallenge('r',21) || player.gt.unlocked && !inChallenge('r',21) },          // Returns a bool for if this layer's node should be visible in the tree.
 
     upgrades: {
         // Look in the upgrades docs to see what goes here!
@@ -965,7 +997,7 @@ addLayer("gt", {
         },
         3: {
             requirementDescription: "10 greater time energy",
-            effectDescription: "Do you remember your start? It's not that far but seeing all this admirable progress it makes you think back to your origins. You were a mere human with the ambition to change the world around him, and you became a human with the ability to control time and space like you'd control eating spaghetti with meatballs. I, the lore maker, am sincerely impressed with your progress. Congratulations.<br>Unlocks 1/3 of the current endgame.",
+            effectDescription: "Do you remember your start? It's not that far but seeing all this admirable progress it makes you think back to your origins. You were a mere human with the ambition to change the world around him, and you became a human with the ability to control time and space like you'd control eating spaghetti with meatballs. I, the lore maker, am sincerely impressed with your progress. Congratulations.<br>Unlocks 1/3 of something...",
             done() {return player.gt.points.gte(10)}
         },
         4: {
@@ -976,12 +1008,16 @@ addLayer("gt", {
     },
     effect() {
         let eff = new Decimal(2).pow(player.gt.points).min(512)
-        let eff2 = player.gt.points.add(1).log(1.05).pow(1.2).add(1)
-        if (eff.gte(512)) eff = eff.mul(eff2) 
+        let eff2 = player.gt.points.add(1).log(1.05).pow(1.4).add(1)
+        if (eff.gte(512)) eff = eff.add(eff2) 
+        if(inChallenge('r',21)) eff = eff.min(1)
         return eff
     },
     effectDescription() {
         return "which is boosting the Generation by " + format(tmp.gt.effect) + "x."
+    },
+    deactivated() {
+        return inChallenge('r',21)
     }
 })
 addLayer("gs", {
@@ -998,7 +1034,7 @@ addLayer("gs", {
 
     color: "#00ffff",                       // The color for this layer, which affects many elements.
     resource: "greater space energy",            // The name of this layer's main prestige resource.
-    row: 4,                                 // The row this layer is on (0 is the first row).
+    row: 3,                                 // The row this layer is on (0 is the first row).
 
     baseResource: "space energy",                 // The name of the resource your prestige gain is based on.
     baseAmount() { return player.s.points },  // A function to return the current amount of baseResource.
@@ -1044,7 +1080,7 @@ addLayer("gs", {
         },
         3: {
             requirementDescription: "10 greater space energy",
-            effectDescription: `You have greatly improved since your last milestone reached. Humanity never gives up, not until they reach the infinity. That's common in your race, fellow human.<br>Unlocks 1/3 of the current endgame.`,
+            effectDescription: `You have greatly improved since your last milestone reached. Humanity never gives up, not until they reach the infinity. That's common in your race, fellow human.<br>Unlocks 1/3 of something...`,
             done() {return player.gs.points.gte(10)}
         },
     },
@@ -1055,4 +1091,61 @@ addLayer("gs", {
     effectDescription() {
         return "which is multiplying the Energy gain by " + format(tmp.gs.effect) + "x and increasing the Hydrogen Tank Capacity by " + format(player.points.pow(543)) + "x."
     }
+})
+addLayer("a", {
+    startData() { return {                  // startData is a function that returns default data for a layer. 
+        unlocked: true,                     // You can add more variables here to add them to your layer.
+        points: new Decimal(0),             // "points" is the internal name for the main resource of the layer.
+        achievements: new Decimal(0)
+    }},
+
+    color: "#4BDC13",                       // The color for this layer, which affects many elements.
+    resource: "achievements",            // The name of this layer's main prestige resource.
+    row: 'side',                                 // The row this layer is on (0 is the first row).
+
+    type: "none",                         // Determines the formula used for calculating prestige currency.
+    exponent: 0.5,                          // "normal" prestige gain is (currency^exponent).
+
+    layerShown() { return true },          // Returns a bool for if this layer's node should be visible in the tree.
+
+    upgrades: {
+        // Look in the upgrades docs to see what goes here!
+    },
+    tooltip: "Achievements",
+    tooltipLocked: "LOCKED Achievements",
+    achievements: {
+        11: {
+            name: "Out with a ????",
+            tooltip: "Start generating points.",
+            done() {return hasUpgrade('p',11)}
+        },
+        12: {
+            name: "Nice.",
+            tooltip: "Get 69 points.<br>Reward: 1.69420x multiplier to Generation.",
+            done() {return player.points.gte(69)}
+        },
+        13: {
+            name: "Science!",
+            tooltip: "Get 1 laboratory.",
+            done() {return player.l.points.gte(1)}
+        },
+        14: {
+            name: "Reresearch",
+            tooltip: "Get 3 laboratories AND make Research be Level 10 at least.",
+            done() {
+                return player.l.points.gte(3) && getBuyableAmount('l',11).gte(10)
+            }
+        },
+        15: {
+            name: "Science!!",
+            tooltip: "Get 35 laboratories.<br>Reward: 1.29x laboratory gain.",
+            done() {return player.l.points.gte(20)}
+        }
+    },
+    tabFormat:[
+        "blank",
+        "blank",
+        "blank",
+        "achievements",
+    ]
 })

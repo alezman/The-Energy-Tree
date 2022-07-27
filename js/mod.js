@@ -3,7 +3,7 @@ let modInfo = {
 	id: "modid93193193012849230842084920389023859029058239058902859043534",
 	author: "Alez",
 	pointsName: "points",
-	modFiles: ["layers.js", "tree.js"],
+	modFiles: ["layers.js", "tree.js", "chapter2.js"],
 
 	discordName: "",
 	discordLink: "",
@@ -13,8 +13,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "1.1.1",
-	name: "THE QOL UPDATE II",
+	num: "1.2",
+	name: "A REBORN UPDATE",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
@@ -27,6 +27,9 @@ let changelog = `<h1>Changelog:</h1><br>
 	<h3>v1.1.1</h3><br>
 	    · frfr gwugs?!?11?11???1111!??!!!1?1<br>
 		· Even more QoL, thanks Acamaeda for the help.<br>
+	<h3>v1.2</h3><br>
+	    · Added the Row 5 layer, lmao.
+		· Fixed a deadly bug and some extra QoL.
 `
 
 let winText = `... and you woke up in your house. Was this all a dream? Stay tuned for the next update!`
@@ -64,7 +67,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return hasUpgrade('st',21)
+	return hasUpgrade('r',33)
 }
 
 

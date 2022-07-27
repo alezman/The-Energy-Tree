@@ -31,7 +31,7 @@ addLayer("tree-tab", {
 })
 ```
 
-## If you want to keep custom stuff on reset, use this:
+## If you want to keep custom upgrades on reset, use this:
 ```js
 doReset(resettingLayer) {
         if (temp[resettingLayer].row > temp.p.row) {
@@ -48,3 +48,5 @@ doReset(resettingLayer) {
     }
 },
 ```
+
+## .push() adds to a variable, .includes() checks if it is within the variable.
