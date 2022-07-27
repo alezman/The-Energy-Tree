@@ -28,8 +28,8 @@ let changelog = `<h1>Changelog:</h1><br>
 	    · frfr gwugs?!?11?11???1111!??!!!1?1<br>
 		· Even more QoL, thanks Acamaeda for the help.<br>
 	<h3>v1.2</h3><br>
-	    · Added the Row 5 layer, lmao.
-		· Fixed a deadly bug and some extra QoL.
+	    · Added the Row 5 layer, lmao.<br>
+		· Fixed a deadly bug and some extra QoL.<br>
 `
 
 let winText = `... and you woke up in your house. Was this all a dream? Stay tuned for the next update!`
